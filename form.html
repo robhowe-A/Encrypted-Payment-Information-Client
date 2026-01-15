@@ -7,8 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form</title>
     <script src="./lib/form.js" type="module" integrity="sha384-mI/f01RaDgjIp7aPjOaP9ZtIWl0uQX3ztRtkppIQ6OvN3HhVu/Sgc0xpSnmHSEoF"></script>
+    <link rel="stylesheet" href="./lib/form.css">
 </head>
 <body>
+<p><strong>Important Note:</strong><br>This form simulates a payment processing flow, encrypting sensitive card information before submission. The Submit button may navigate to a page that is an error page; however, the simulation is designed this way. A refresh is required to see the final result. Click the URL and press enter for  the completed decrypted request. README: <a href="https://github.com/robhowe-A/Encrypted-Payment-Information-Demo?tab=readme-ov-file#important-note" title="Important Note | Encrypted-Payment-Information-Demo" rel="nofollow noreferrer" target="_blank">Important Note | Encrypted-Payment-Information-Demo</a><br><br><hr><br><br>
     <form 
       action="decrypted.html" 
       method="post" 
@@ -16,52 +18,39 @@
       name="PIF" 
       enctype="multipart/form-data">
         <fieldset>
-            <legend>Payment Information</legend>
-            <div>
-                <label>Card Holder Name:
-                    <input 
-                      name="cardholder-name" 
-                      data-validate="name" 
-                      type="text" 
-                      spellcheck="false" 
-                      required 
-                      placeholder="Name" 
-                      style="appearance: textfield;" 
-                      autofocus 
-                      autocorrect="off" 
-                      pattern="^\w+\s\w+$" 
-                      title="Accepted Input: First Last">
+          <legend>Payment Information</legend>
+          <div>
+            <label>Cardholder Name:
+              <input 
+                name="cardholder-name" 
+                data-validate="name" 
+                type="text" 
+                spellcheck="false" 
+                required 
+                placeholder="Firstname Lastname" 
+                style="appearance: textfield;" 
+                autofocus 
+                autocorrect="off" 
+                pattern="^[A-Za-z]{1,64}\s[A-Za-z]{1,64}$" 
+                title="Accepted Input: First Last [a-z]">
                 </label>
             </div>
-            <div>
-              <div>
-                  <label>Credit Card Number
+            <div>Credit Card Information:
+              <div id="credit-card-information">
+                <div id="credit-card-number">
+                  <label>
                     <input
                       name="credit-number" 
                       data-validate="number" 
                       type="text" 
                       spellcheck="false" 
                       required 
-                      placeholder="Card Number" 
+                      placeholder="####-####-####-####" 
                       autocorrect="off"
                       pattern="^\d{4}(-)\d{4}\1\d{4}\1\d{4}$" 
                       title="Accepted Input: ####-####-####-####">
                   </label>
-              </div>
-              <div>
-                  <label>CVV Number
-                    <input 
-                      name="card-verification-number" 
-                      data-validate="code" 
-                      type="text" 
-                      spellcheck="false" 
-                      required 
-                      placeholder="CVV Digits" 
-                      autocorrect="off" 
-                      pattern="^\d{3}$" 
-                      title="Accepted Input: ###">
-                  </label>
-                  <label>Expiration Month
+                  <label id="card-expiration-month">
                     <input 
                       name="card-expiration-month" 
                       data-validate="month" 
@@ -69,14 +58,29 @@
                       spellcheck="false" 
                       required 
                       placeholder="YYYY-MM" 
-                      autocorrect="off" 
-                      pattern="^\d{4}(-|/)\d{2}$" 
-                      title="Accepted Input: YYYY-MM">
+                      autocorrect="off"
+                      pattern="^(202[6-9]|20[3-9]\d{1})(-|/)(0[1-9]|1[012])$"
+                      title="Accepted Input: >2026, YYYY-MM">
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label id="card-verification-number">Service Code:
+                  <input
+                    name="card-verification-number"
+                    data-validate="code"
+                    type="text"
+                    spellcheck="false"
+                    required
+                    placeholder="CVV"
+                    autocorrect="off"
+                    pattern="^\d{3}$"
+                    title="Accepted Input: ###">
                   </label>
               </div>
-            </div>
-            <input type="reset">
-            <input type="submit">
+          </div>
+          <input type="reset">
+          <input type="submit">
         </fieldset>
         <input 
           id="Transaction-Guid" 
@@ -88,6 +92,7 @@
           type="hidden" 
           spellcheck="false" 
           value="00000000-00000000-00000000-00000000">
+        <br>
         <output 
           id="PIFS" 
           name="Summary" 
@@ -98,6 +103,7 @@
             <span>CVV Number(text): <strong data-id="validated-code"></strong></span><br>
             <span>Expiration Month(text): <strong data-id="validated-month"></strong></span>
         </output>
+        <br><br>
         <output 
               id="PIFIM" 
               name="Intermediate" 
@@ -109,5 +115,6 @@
             <span>Expiration Month(encrypted): <strong data-id="encrypted-month"></strong></span>
         </output>
     </form>
+<br><br><br><br><hr>
 </body>
 </html>

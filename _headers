@@ -1,0 +1,10 @@
+*
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors https://www.roberthowell.dev;
+/*
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors https://www.roberthowell.dev;
+/lib/form.js
+  X-Frame-Options: DENY
+/lib/decrypted.js
+  X-Frame-Options: DENY

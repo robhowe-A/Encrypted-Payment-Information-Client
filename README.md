@@ -1,45 +1,49 @@
-﻿<!--Copyright (c) Robert A. Howell  2026
-Folder_Name: PaymentForm
-Author: Robert Howell
-Description: Demonstrates card payment encryption and decryption methods in application-layer encryption architecture. This demonstration uses an HTML form, JavaScript event handling, and browser cryptography.
-  Comment: Jet Brains Rider AI Assistant was used to troubleshoot the creation of this example.
+<!--
+Copyright (c) 2026 Robert A. Howell
+Author: Robert A. Howell
+Description: Card payment encryption and decryption demonstrate methods in application-layer encryption architecture. This demonstration uses an HTML form, JavaScript event handling, and browser cryptography.
   Warning: This is not a production implementation. It is not recommended to develop your own payment scheme environment without a good security reason to do so.
-Date: 2026-01-07
-Edited: 2026-01-08
+Created_Date: 2026-01-07
+Edited: 2026-07-28
 -->
 
-# Features  
-This folder holds the source code demonstrating a card payment used in the browser.  
+# Payment Information Demo  
+This folder showcases a demonstration of a card payment used in the browser. A user enters their payment information and returns to see the data decrypted after transport.  
 
-Running the code demonstrates secure data encryption and decryption. A user enters their payment information and returns to see the data decrypted.  
+### Important note  
+Note: After submission, you should see a 404. This is because of the POST method submitted where the browser expected a GET. This is normal. Click on the URL and press enter to resume/complete the demo. The steps in full are:
+1. Enter the form information at the provided URL and click to submit
+2. Click the URL and press enter to refresh the page
+
+Running the demo demonstrates secure data encryption and decryption.  
+
+Secure cryptograms are transmitted via browser session API. There are no networked servers; therefore, the browser simulates the data transfer in place of a networked server.  
 
 ## Details  
 1. JavaScript handles form submission, encryption, and decryption
 2. RSA-OAEP encryption and decryption
-3. See your encrypted ciphertext revealed in the gold-bordered output
-    >Hint: Cryptograms are produced by submitting the form and consumed after transmit
+3. See encrypted ciphertext revealed in the gold-bordered output
+   >Hint: Cryptograms are produced by submitting the form and consumed after transmitting
 4. Form validation filters the cardholder data inputs
 
-### Descriptoin and Use Cases  
-Enter any card information and click 'Submit'. You're taken to the next page showing the data decrypted. Form data is encrypted and submitted. It is decrypted at the next page.  
-
-Secure cryptograms are transmitted via browser session API. Browser cryptography implements encryption and decryption. There are no networked servers, so, the browser simulates the data transfer in place of a networked server.  
-
-_____
 
 ## Architecture  
-The browser encrypts and decrypts payment information. This architecture demonstrates client cryptography, which can be used in applications like payment processors, federated applications or even service workers.  
+The browser encrypts and decrypts payment information. This architecture demonstrates client cryptography, which can be used in applications like payment processors, federated applications or even service workers.  The browser encrypts and decrypts data in the browser session storage.  
 
-Cryptography functions use globalThis and transmit data uses window. In real practice, 'globalThis' is an interchangeable moniker for 'window'.  
+### PCI-DSS compliance:
+- Designed for web payments and to meet the SAQ A-EP payment page requirements
+- PCI-DSS 4.x
+- No PAN storage
+- All scripts are implemented with integrity check
 
-### globalThis calls cryptographic functions  
-//encryption function called  
+### Encrypt function call  
+//cyphertext creation  
 ~~~ Javascript
 globalThis.crypto.subtle.encrypt({name: "RSA-OAEP"}, key, plaintext);
 ~~~
 
-### window transmits encrypted data keys  
-//window session is the transmit medium  
+### Session storage  
+//window session is the transmitted medium  
 ~~~ Javascript
 window.sessionStorage.setItem(KeyName, PEMKey);
 ~~~
@@ -47,37 +51,16 @@ window.sessionStorage.setItem(KeyName, PEMKey);
 As shown above, from the code, the session storage holds the decryption key.  
 
 **SECURITY NOTE:**  
--A secret key is not securely generated on a client system in secure environments  
--Because there is no server, the private key would be available to intercept with XSS (cross-site-scripting) and the browser debugger  
+-A secret key is not securely generated on a client system in secure environments
+-Because there is no server, the private key would be available to intercept with XSS (cross-site-scripting) and the browser debugger
 
-Please note: Transport encryption is not the same as application layer encryption. Merely because a page is encrypted does not mean your data is being protected and handled securely.  
-
-### Developers  
-Command: npm run build   
-
-### Users  
-Hosted page: https://paymentinformationdemo.netlify.app/form.html
-Note: After submission, you should see a 404. This is because of the POST method submitted where the browser expected a GET. This is normal. Just click in the URL and press enter to resume/complete the demo. The steps in full are:
-1. Enter the form information at the provided URL and click to submit
-2. Click the URL to refresh the page, not refresh or try again option
+Please note: Transport encryption is different from application layer encryption. Merely because a page is encrypted does not mean your data is being protected and handled securely.  
 _____
 
-## Delve into the code  
+## A peek into the code  
 
-### Key pair generation  
-//generate a key pair  
-~~~ JavaScript
-globalThis.crypto.subtle.generateKey( 
-    {
-        name: "RSA-OAEP",
-        modulusLength: 2048,
-        publicExponent: new Uint8Array([1, 0, 1]),
-        hash: "SHA-256",
-    }, true, ["encrypt", "decrypt"]);
-~~~
-
-### Key export  
-//store the encryption key later decryption  
+### Key transport  
+//store the key for later decryption  
 ~~~ JavaScript
 const KeyStorage = new Promise((resolve, reject) => {
      return resolve(secrets.cryptography.exportKey(keyPair.privateKey));
